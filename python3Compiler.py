@@ -16,5 +16,6 @@ class python3Compiler():
             type = "FALSE"
         elif dataType == "DATE":
             type = '"01/01/1970"'
-
         return str(identifier + " = " + type)
+    def declareConstant(self,identifier,value):
+        return str(identifier + " = " + value)

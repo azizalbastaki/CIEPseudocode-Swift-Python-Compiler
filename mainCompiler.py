@@ -4,35 +4,42 @@ class compiler():
         self.language = lang
         self.scope = 0
         self.currentLine = ""
-        print(self.checkAssignment("DECLARE SCm: STRING"))
+        print(self.checkAssignment('CONSTANT HELLO = "World"'))
     def compile(self,file):
         self.file = open(file,"r")
         for i in self.file:
             self.currentLine = i.strip()
-    def __performDiagnosis(self,line):
+    def performDiagnosis(self,line):
         pass
     def checkAssignment(self,line):
         self.assignmentHolder = line.split()
         if self.assignmentHolder[0] == "DECLARE":
             identifer = self.assignmentHolder[1]
-            datatype = ""
+            #datatype = ""
             if identifer[-1] == ":":
                 identifer = identifer[0:-1]
                 datatype = self.assignmentHolder[2]
             else:
                 datatype = self.assignmentHolder[3]
             return (self.language.declareVariable(identifer, datatype))
-    def checkSelection(line):
+        if self.assignmentHolder[0] == "CONSTANT":
+            identifer = self.assignmentHolder[1]
+            constantValue = self.assignmentHolder[3]
+            return (self.language.declareConstant(identifer, constantValue))
+
+    def checkSelection(self,line):
         pass
-    def checkIteration(line):
+    def checkIteration(self,line):
         pass
-    def checkMethods(line):
+    def checkMethods(self,line):
         pass
-    def checkOperations(line):
+    def checkOperations(self,line):
         pass
-    def checkFile(line):
+    def checkFile(self,line):
         pass
-    def checkUserDataTypes(line):
+    def checkUserDataTypes(self,line):
+        pass
+    def checkComments(self,line):
         pass
 from swiftCompiler import swift5Compiler
 from python3Compiler import python3Compiler

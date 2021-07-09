@@ -16,5 +16,6 @@ class swift5Compiler():
             type = "Bool"
         elif dataType == "DATE":
             type = 'Date'
-
         return str("var " + identifier + ": " + type)
+    def declareConstant(self,identifier,value):
+        return str("let " + identifier + " = " + value)
