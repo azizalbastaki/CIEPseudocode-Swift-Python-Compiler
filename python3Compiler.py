@@ -19,3 +19,9 @@ class python3Compiler():
         return str(identifier + " = " + type)
     def declareConstant(self,identifier,value):
         return str(identifier + " = " + value)
+    def assignVariable(self, *args):
+        operations = ""
+        for i in range(2,len(args[0])):
+            operations+= str(args[0][i])
+        operations = operations.replace("<>", "!=")
+        return str(args[0][0] + " = " + str(operations))
