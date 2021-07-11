@@ -2,20 +2,20 @@ class swift5Compiler():
     def __init__(self):
         pass
     def declareVariable(self, identifier,dataType):
-        type = ""
+        dtype = ""
         #   USE MATCH/CASE STATEMENT HERE IN PYTHON 3.10
         if dataType == "STRING":
-            type = 'String'
+            dtype = 'String'
         elif dataType == "INTEGER":
-            type = "Integer"
+            dtype = "Integer"
         elif dataType == "REAL":
-            type = "Float"
+            dtype = "Float"
         elif dataType == "CHAR":
-            type = "Character"
+            dtype = "Character"
         elif dataType == "BOOLEAN":
-            type = "Bool"
+            dtype = "Bool"
         elif dataType == "DATE":
-            type = 'Date'
-        return str("var " + identifier + ": " + type)
+            dtype = 'Date'
+        return str("var " + identifier + ": " + dtype)
     def declareConstant(self,identifier,value):
         return str("let " + identifier + " = " + value)

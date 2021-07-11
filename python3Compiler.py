@@ -2,21 +2,21 @@ class python3Compiler():
     def __init__(self):
         pass
     def declareVariable(self,identifier,dataType):
-        type = ""
+        dtype = ""
         #   USE MATCH/CASE STATEMENT HERE IN PYTHON 3.10
         if dataType == "STRING":
-            type = '""'
+            dtype = '""'
         elif dataType == "INTEGER":
-            type = "0"
+            dtype = "0"
         elif dataType == "REAL":
-            type = "0.0"
+            dtype = "0.0"
         elif dataType == "CHAR":
-            type = '"A"'
+            dtype = '"A"'
         elif dataType == "BOOLEAN":
-            type = "FALSE"
+            dtype = "FALSE"
         elif dataType == "DATE":
-            type = '"01/01/1970"'
-        return str(identifier + " = " + type)
+            dtype = '"01/01/1970"'
+        return str(identifier + " = " + dtype)
     def declareConstant(self,identifier,value):
         return str(identifier + " = " + value)
     def assignVariable(self, *args):
@@ -24,4 +24,14 @@ class python3Compiler():
         for i in range(2,len(args[0])):
             operations+= str(args[0][i])
         operations = operations.replace("<>", "!=")
+        operations = operations.replace(" AND ", " and ")
+        operations = operations.replace(" NOT ", " not ")
+        operations = operations.replace(" OR ", " or ")
+        operations = operations.replace("=", "==")
+
+        operationsChanges = True
+        while operationsChanges == True:
+            operationsChanges = False
+
+
         return str(args[0][0] + " = " + str(operations))
