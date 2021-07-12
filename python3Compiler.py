@@ -25,6 +25,7 @@ class python3Compiler():
             operations+= str(args[0][i])
         operations = operations.replace("<>", "!=")
         operations = operations.replace(" AND ", " and ")
+        operations = operations.replace("&", "+")
         operations = operations.replace(" NOT ", " not ")
         operations = operations.replace(" OR ", " or ")
         operations = operations.replace("=", "==")
@@ -32,6 +33,28 @@ class python3Compiler():
         operationsChanges = True
         while operationsChanges == True:
             operationsChanges = False
+            if "RIGHT(" in operations:
+                index = operations.find("RIGHT(")
+                selectedCode = operations[index]
+                while operations[index] != ")":
+                    index += 1
+                    selectedCode += operations[index]
+                values = []
+                opened = False
+                currentValue = ''
+                for char in selectedCode:
+                    if opened == True:
+                        if char == ',':
+                            values.append(currentValue)
+                        else:
+                            currentValue+= str(char)
+                    else:
+                        if char == "(":
+                            opened = True
 
+                values[-1] = values[-1][:-1]
 
         return str(args[0][0] + " = " + str(operations))
+
+    def findStringManip(self, oper, stringOp):
+        pass
