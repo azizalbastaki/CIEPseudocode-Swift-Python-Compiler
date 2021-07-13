@@ -35,7 +35,8 @@ class python3Compiler():
             operationsChanges = False
             if "RIGHT(" in operations:
                 parameters = self.findStringModValues(operations,"RIGHT(")
-                replacementCode = str(parameters[0]) + "[" + str(parameters[1] + "]")
+                replacementCode = str(parameters[0]) + "[-" + str(parameters[1] + ":]")
+
                 operations = operations.replace("RIGHT(" + str(parameters[0]) +", "+ str(parameters[1] + ")"),replacementCode)
                 operations = operations.replace("RIGHT(" + str(parameters[0]) +" , "+ str(parameters[1] + ")"),replacementCode)
                 operations = operations.replace("RIGHT(" + str(parameters[0]) +","+ str(parameters[1]+ ")"),replacementCode)
