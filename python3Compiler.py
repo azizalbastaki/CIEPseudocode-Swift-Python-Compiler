@@ -34,27 +34,34 @@ class python3Compiler():
         while operationsChanges == True:
             operationsChanges = False
             if "RIGHT(" in operations:
-                index = operations.find("RIGHT(")
-                selectedCode = operations[index]
-                while operations[index] != ")":
-                    index += 1
-                    selectedCode += operations[index]
-                values = []
-                opened = False
-                currentValue = ''
-                for char in selectedCode:
-                    if opened == True:
-                        if char == ',':
-                            values.append(currentValue)
-                        else:
-                            currentValue+= str(char)
-                    else:
-                        if char == "(":
-                            opened = True
-
-                values[-1] = values[-1][:-1]
-
+                parameters = self.findStringModValues(operations,"RIGHT(")
+                replacementCode = str(parameters[0]) + "[" + str(parameters[1] + "]")
+                operations = operations.replace("RIGHT(" + str(parameters[0]) +", "+ str(parameters[1] + ")"),replacementCode)
+                operations = operations.replace("RIGHT(" + str(parameters[0]) +" , "+ str(parameters[1] + ")"),replacementCode)
+                operations = operations.replace("RIGHT(" + str(parameters[0]) +","+ str(parameters[1]+ ")"),replacementCode)
+                operations = operations.replace("RIGHT(" + str(parameters[0]) +" ,"+ str(parameters[1]+ ")"),replacementCode)
+                operationsChanges = True
         return str(args[0][0] + " = " + str(operations))
 
-    def findStringManip(self, oper, stringOp):
-        pass
+    def findStringModValues(self, oper, stringOp):
+        index = oper.find(stringOp)
+        selectedCode = oper[index]
+        while oper[index] != ")":
+            index += 1
+            selectedCode += oper[index]
+        values = []
+        opened = False
+        currentValue = ''
+        for char in selectedCode:
+            if opened == True:
+                if char == ',':
+                    values.append(currentValue)
+                    currentValue = ""
+                else:
+                    currentValue+= str(char)
+            else:
+                if char == "(":
+                    opened = True
+        values.append(currentValue)
+        values[-1] = values[-1][:-1]
+        return values

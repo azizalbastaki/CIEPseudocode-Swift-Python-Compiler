@@ -4,7 +4,7 @@ class compiler():
         self.language = lang
         self.scope = 0
         self.currentLine = ""
-        print(self.checkAssignment('HELLO <-- (WHAT+WHAT)<>23'))
+        print(self.checkAssignment('HELLO <-- RIGHT("SAM", 3)'))
     def compile(self,file):
         self.file = open(file,"r")
         for i in self.file:
