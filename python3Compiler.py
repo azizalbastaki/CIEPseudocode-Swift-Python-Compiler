@@ -35,21 +35,35 @@ class python3Compiler():
             operationsChanges = False
             if "RIGHT(" in operations:
                 parameters = self.findStringModValues(operations,"RIGHT(")
-                replacementCode = str(parameters[0]) + "[-" + str(parameters[1] + ":]")
-
-                operations = operations.replace("RIGHT(" + str(parameters[0]) +", "+ str(parameters[1] + ")"),replacementCode)
-                operations = operations.replace("RIGHT(" + str(parameters[0]) +" , "+ str(parameters[1] + ")"),replacementCode)
-                operations = operations.replace("RIGHT(" + str(parameters[0]) +","+ str(parameters[1]+ ")"),replacementCode)
-                operations = operations.replace("RIGHT(" + str(parameters[0]) +" ,"+ str(parameters[1]+ ")"),replacementCode)
+                replacementCode = str(parameters[0]) + "[-" + str(int(parameters[1])-1) + ":]"
+                operations = operations.replace(self.findSelectedCode(operations, "RIGHT("),replacementCode)
                 operationsChanges = True
+            if "LENGTH(" in operations:
+                parameters = self.findStringModValues(operations,"LENGTH(")
+                replacementCode = "len(" + str(parameters[0]) + ")"
+                operations = operations.replace(self.findSelectedCode(operations, "LENGTH("),replacementCode)
+                operationsChanges = True
+            if "MID(" in operations:
+                parameters = self.findStringModValues(operations,"MID(")
+                replacementCode = str(parameters[0]) + "[" + str(parameters[1] + ":" + str(int(parameters[1]) - 1 + int(parameters[2]))) + "]"
+                operations = operations.replace(self.findSelectedCode(operations, "MID("),replacementCode)
+                operationsChanges = True
+            if "LCASE(" in operations:
+                parameters = self.findStringModValues(operations,"LCASE(")
+                replacementCode = str(parameters[0]) + ".lower()"
+                operations = operations.replace(self.findSelectedCode(operations, "LCASE("),replacementCode)
+                operationsChanges = True
+            if "UCASE(" in operations:
+                parameters = self.findStringModValues(operations,"UCASE(")
+                replacementCode = str(parameters[0]) + ".upper()"
+                operations = operations.replace(self.findSelectedCode(operations, "UCASE("),replacementCode)
+                operationsChanges = True
+
+        operations = self.decreaseIndex(operations)
         return str(args[0][0] + " = " + str(operations))
 
     def findStringModValues(self, oper, stringOp):
-        index = oper.find(stringOp)
-        selectedCode = oper[index]
-        while oper[index] != ")":
-            index += 1
-            selectedCode += oper[index]
+        selectedCode = self.findSelectedCode(oper,stringOp)
         values = []
         opened = False
         currentValue = ''
@@ -65,4 +79,30 @@ class python3Compiler():
                     opened = True
         values.append(currentValue)
         values[-1] = values[-1][:-1]
+        return values
+
+    def findSelectedCode(self,oper,stringOp):
+        index = oper.find(stringOp)
+        selectedCode = oper[index]
+        while oper[index] != ")":
+            index += 1
+            selectedCode += oper[index]
+        return selectedCode
+
+    def decreaseIndex(self,oper):
+        values = oper
+        opened = False
+        for i in range(0, len(values)):
+            if not opened:
+                if values[i] == "[":
+                    opened = True
+            else:
+                if values[i] == "]":
+                    opened = False
+                else:
+                    try:
+                        newInt = str(int(values[i]) -1)
+                        values = values[:i] + str(newInt) + values[i+1:]
+                    except:
+                        pass
         return values
