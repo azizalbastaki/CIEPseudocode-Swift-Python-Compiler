@@ -45,7 +45,7 @@ class python3Compiler():
                 operationsChanges = True
             if "MID(" in operations:
                 parameters = self.findStringModValues(operations,"MID(")
-                replacementCode = str(parameters[0]) + "[" + str(parameters[1] + ":" + str(int(parameters[1]) - 1 + int(parameters[2]))) + "]"
+                replacementCode = str(parameters[0]) + "[" + str(parameters[1] + ":" + str(int(parameters[1]) + int(parameters[2]))) + "]"
                 operations = operations.replace(self.findSelectedCode(operations, "MID("),replacementCode)
                 operationsChanges = True
             if "LCASE(" in operations:

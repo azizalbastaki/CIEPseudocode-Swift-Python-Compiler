@@ -19,3 +19,91 @@ class swift5Compiler():
         return str("var " + identifier + ": " + dtype)
     def declareConstant(self,identifier,value):
         return str("let " + identifier + " = " + value)
+    
+    def assignVariable(self, *args):
+            operations = ""
+            for i in range(2,len(args[0])):
+                operations+= str(args[0][i])
+            operations = operations.replace("<>", "!=")
+            operations = operations.replace(" AND ", " and ")
+            operations = operations.replace("&", "+")
+            operations = operations.replace(" NOT ", " not ")
+            operations = operations.replace(" OR ", " or ")
+            operations = operations.replace("=", "==")
+
+            operationsChanges = True
+            while operationsChanges == True:
+                operationsChanges = False
+                if "RIGHT(" in operations:
+                    parameters = self.findStringModValues(operations,"RIGHT(")
+                    replacementCode = str(parameters[0]) + ".prefix(" + str(int(parameters[1])) + ")"
+                    operations = operations.replace(self.findSelectedCode(operations, "RIGHT("),replacementCode)
+                    operationsChanges = True
+                if "LENGTH(" in operations:
+                    parameters = self.findStringModValues(operations,"LENGTH(")
+                    replacementCode = str(parameters[0]) + ".count"
+                    operations = operations.replace(self.findSelectedCode(operations, "LENGTH("),replacementCode)
+                    operationsChanges = True
+                if "MID(" in operations:
+                    parameters = self.findStringModValues(operations,"MID(")
+                    replacementCode = str(parameters[0]) + ".prefix(" + str(int(parameters[1]) + int(str(parameters[2])) - 1) + ").suffix(" + str(parameters[2]) + ")"
+                    operations = operations.replace(self.findSelectedCode(operations, "MID("),replacementCode)
+                    operationsChanges = True
+                if "LCASE(" in operations:
+                    parameters = self.findStringModValues(operations,"LCASE(")
+                    replacementCode = str(parameters[0]) + ".lowercased()"
+                    operations = operations.replace(self.findSelectedCode(operations, "LCASE("),replacementCode)
+                    operationsChanges = True
+                if "UCASE(" in operations:
+                    parameters = self.findStringModValues(operations,"UCASE(")
+                    replacementCode = str(parameters[0]) + ".uppercased()"
+                    operations = operations.replace(self.findSelectedCode(operations, "UCASE("),replacementCode)
+                    operationsChanges = True
+
+            operations = self.decreaseIndex(operations)
+            return str(args[0][0] + " = " + str(operations))
+
+    def findStringModValues(self, oper, stringOp):
+        selectedCode = self.findSelectedCode(oper,stringOp)
+        values = []
+        opened = False
+        currentValue = ''
+        for char in selectedCode:
+            if opened == True:
+                if char == ',':
+                    values.append(currentValue)
+                    currentValue = ""
+                else:
+                    currentValue+= str(char)
+            else:
+                if char == "(":
+                    opened = True
+        values.append(currentValue)
+        values[-1] = values[-1][:-1]
+        return values
+
+    def findSelectedCode(self,oper,stringOp):
+        index = oper.find(stringOp)
+        selectedCode = oper[index]
+        while oper[index] != ")":
+            index += 1
+            selectedCode += oper[index]
+        return selectedCode
+
+    def decreaseIndex(self,oper):
+        values = oper
+        opened = False
+        for i in range(0, len(values)):
+            if not opened:
+                if values[i] == "[":
+                    opened = True
+            else:
+                if values[i] == "]":
+                    opened = False
+                else:
+                    try:
+                        newInt = str(int(values[i]) -1)
+                        values = values[:i] + str(newInt) + values[i+1:]
+                    except:
+                        pass
+        return values

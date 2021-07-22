@@ -4,7 +4,7 @@ class compiler():
         self.language = lang
         self.scope = 0
         self.currentLine = ""
-        print(self.checkAssignment('HELLO <-- LCASE("S")'))
+        print(self.checkAssignment('MAGIC <-- MID("Endeavor",3,4)'))
     def compile(self,file):
         self.file = open(file,"r")
         for i in self.file:
@@ -47,5 +47,5 @@ from python3Compiler import python3Compiler
 swiftComp = swift5Compiler()
 pythonComp = python3Compiler()
 
-#swiftCom = compiler(swiftComp)
+swiftCom = compiler(swiftComp)
 pythonComp = compiler(pythonComp)
