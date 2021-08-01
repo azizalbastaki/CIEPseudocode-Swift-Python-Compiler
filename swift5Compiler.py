@@ -24,44 +24,46 @@ class swift5Compiler():
             operations = ""
             for i in range(2,len(args[0])):
                 operations+= str(args[0][i])
-            operations = operations.replace("<>", "!=")
-            operations = operations.replace(" AND ", " and ")
-            operations = operations.replace("&", "+")
-            operations = operations.replace(" NOT ", " not ")
-            operations = operations.replace(" OR ", " or ")
-            operations = operations.replace("=", "==")
+            return str(args[0][0] + " = " + str(self.translateOperations(operations)))
 
-            operationsChanges = True
-            while operationsChanges == True:
-                operationsChanges = False
-                if "RIGHT(" in operations:
-                    parameters = self.findStringModValues(operations,"RIGHT(")
-                    replacementCode = str(parameters[0]) + ".prefix(" + str(int(parameters[1])) + ")"
-                    operations = operations.replace(self.findSelectedCode(operations, "RIGHT("),replacementCode)
-                    operationsChanges = True
-                if "LENGTH(" in operations:
-                    parameters = self.findStringModValues(operations,"LENGTH(")
-                    replacementCode = str(parameters[0]) + ".count"
-                    operations = operations.replace(self.findSelectedCode(operations, "LENGTH("),replacementCode)
-                    operationsChanges = True
-                if "MID(" in operations:
-                    parameters = self.findStringModValues(operations,"MID(")
-                    replacementCode = str(parameters[0]) + ".prefix(" + str(int(parameters[1]) + int(str(parameters[2])) - 1) + ").suffix(" + str(parameters[2]) + ")"
-                    operations = operations.replace(self.findSelectedCode(operations, "MID("),replacementCode)
-                    operationsChanges = True
-                if "LCASE(" in operations:
-                    parameters = self.findStringModValues(operations,"LCASE(")
-                    replacementCode = str(parameters[0]) + ".lowercased()"
-                    operations = operations.replace(self.findSelectedCode(operations, "LCASE("),replacementCode)
-                    operationsChanges = True
-                if "UCASE(" in operations:
-                    parameters = self.findStringModValues(operations,"UCASE(")
-                    replacementCode = str(parameters[0]) + ".uppercased()"
-                    operations = operations.replace(self.findSelectedCode(operations, "UCASE("),replacementCode)
-                    operationsChanges = True
-
+    def translateOperations(self, operationsParameter):
+        operations = operationsParameter
+        operations = operations.replace("<>", "!=")
+        operations = operations.replace(" AND ", " and ")
+        operations = operations.replace("&", "+")
+        operations = operations.replace(" NOT ", " not ")
+        operations = operations.replace(" OR ", " or ")
+        operations = operations.replace("=", "==")
+        self.operationChanges = True
+        while self.operationChanges == True:
+            self.operationChanges = False
+            if "RIGHT(" in operations:
+                parameters = self.findStringModValues(operations,"RIGHT(")
+                replacementCode = str(parameters[0]) + ".prefix(" + str(int(parameters[1])) + ")"
+                operations = operations.replace(self.findSelectedCode(operations, "RIGHT("),replacementCode)
+                self.operationChanges = True
+            if "LENGTH(" in operations:
+                parameters = self.findStringModValues(operations,"LENGTH(")
+                replacementCode = str(parameters[0]) + ".count"
+                operations = operations.replace(self.findSelectedCode(operations, "LENGTH("),replacementCode)
+                self.operationChanges = True
+            if "MID(" in operations:
+                parameters = self.findStringModValues(operations,"MID(")
+                replacementCode = str(parameters[0]) + ".prefix(" + str(int(parameters[1]) + int(str(parameters[2])) - 1) + ").suffix(" + str(parameters[2]) + ")"
+                operations = operations.replace(self.findSelectedCode(operations, "MID("),replacementCode)
+                self.operationChanges = True
+            if "LCASE(" in operations:
+                parameters = self.findStringModValues(operations,"LCASE(")
+                replacementCode = str(parameters[0]) + ".lowercased()"
+                operations = operations.replace(self.findSelectedCode(operations, "LCASE("),replacementCode)
+                self.operationChanges = True
+            if "UCASE(" in operations:
+                parameters = self.findStringModValues(operations,"UCASE(")
+                replacementCode = str(parameters[0]) + ".uppercased()"
+                operations = operations.replace(self.findSelectedCode(operations, "UCASE("),replacementCode)
+                self.operationChanges = True
             operations = self.decreaseIndex(operations)
-            return str(args[0][0] + " = " + str(operations))
+            return operations
 
     def findStringModValues(self, oper, stringOp):
         selectedCode = self.findSelectedCode(oper,stringOp)
