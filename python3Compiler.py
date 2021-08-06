@@ -25,6 +25,22 @@ class python3Compiler():
             operations+= str(args[0][i])
         return str(args[0][0] + " = " + str(self.translateOperations(operations)))
 
+    def makeSelection(self, line):
+        if line == "THEN":
+            pass
+        elif line.split()[0] == "IF":
+            conditionLine = line
+            conditionLine = conditionLine.replace("IF ","")
+            conditionLine = conditionLine.replace(" THEN","")
+            conditionLine = self.translateOperations(conditionLine)
+            return ("if " + conditionLine + ": ")
+        elif line.split()[0] == "CASE":
+            return ("CASE STATEMENTS NOT YET SUPPORTED IN PYTHON")
+        elif line == "ENDIF" or line == "ENDCASE":
+            return ""
+
+    # --- SUB METHODS DEPLOYED IN ABOVE METHODS ---
+
     def translateOperations(self, operationsParameter):
         operations = operationsParameter
         operations = operations.replace("<>", "!=")
@@ -37,34 +53,34 @@ class python3Compiler():
         while self.operationsChanges == True:
             self.operationsChanges = False
             if "RIGHT(" in operations:
-                parameters = self.findStringModValues(operations,"RIGHT(")
+                parameters = self.findStringParameterValues(operations, "RIGHT(")
                 replacementCode = str(parameters[0]) + "[-" + str(int(parameters[1])-1) + ":]"
                 operations = operations.replace(self.findSelectedCode(operations, "RIGHT("),replacementCode)
                 self.operationChanges = True
             if "LENGTH(" in operations:
-                parameters = self.findStringModValues(operations,"LENGTH(")
+                parameters = self.findStringParameterValues(operations, "LENGTH(")
                 replacementCode = "len(" + str(parameters[0]) + ")"
                 operations = operations.replace(self.findSelectedCode(operations, "LENGTH("),replacementCode)
                 self.operationChanges = True
             if "MID(" in operations:
-                parameters = self.findStringModValues(operations,"MID(")
+                parameters = self.findStringParameterValues(operations, "MID(")
                 replacementCode = str(parameters[0]) + "[" + str(parameters[1] + ":" + str(int(parameters[1]) + int(parameters[2]))) + "]"
                 operations = operations.replace(self.findSelectedCode(operations, "MID("),replacementCode)
                 self.operationChanges = True
             if "LCASE(" in operations:
-                parameters = self.findStringModValues(operations,"LCASE(")
+                parameters = self.findStringParameterValues(operations, "LCASE(")
                 replacementCode = str(parameters[0]) + ".lower()"
                 operations = operations.replace(self.findSelectedCode(operations, "LCASE("),replacementCode)
                 self.operationChanges = True
             if "UCASE(" in operations:
-                parameters = self.findStringModValues(operations,"UCASE(")
+                parameters = self.findStringParameterValues(operations, "UCASE(")
                 replacementCode = str(parameters[0]) + ".upper()"
                 operations = operations.replace(self.findSelectedCode(operations, "UCASE("),replacementCode)
                 self.operationChanges = True
             operations = self.decreaseIndex(operations)
             return operations
 
-    def findStringModValues(self, oper, stringOp):
+    def findStringParameterValues(self, oper, stringOp):
         selectedCode = self.findSelectedCode(oper,stringOp)
         values = []
         opened = False
