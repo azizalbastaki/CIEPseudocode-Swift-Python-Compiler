@@ -35,9 +35,19 @@ class python3Compiler():
             conditionLine = self.translateOperations(conditionLine)
             return ("if " + conditionLine + ": ")
         elif line.split()[0] == "CASE":
-            return ("CASE STATEMENTS NOT YET SUPPORTED IN PYTHON")
+            return (" CASE STATEMENTS NOT YET SUPPORTED IN PYTHON")
         elif line == "ENDIF" or line == "ENDCASE":
             return ""
+
+    def checkCase(self,line):
+        if len(line.split) != 0:
+            return "# CASE STATEMENTS NOT YET SUPPORTED IN PYTHON"
+
+
+
+
+
+
 
     # --- SUB METHODS DEPLOYED IN ABOVE METHODS ---
 

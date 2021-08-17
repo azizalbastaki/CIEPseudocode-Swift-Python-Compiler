@@ -40,6 +40,27 @@ class swift5Compiler():
         elif line == "ENDIF" or line == "ENDCASE":
             return "}"
 
+    def checkInputOutput(self,line):
+        if line.split()[0] == "OUTPUT":
+            return "print(" + line.split()[1:] + ")"
+
+    def checkCase(self,line):
+        if (line.split()[1] == ":"):
+            if line.split()[0] == "OTHERWISE":
+                return "default:" + self.translateLine(line.replace("OTHERWISE :", ""))
+
+        elif (line.split()[0][-1] == ":"):
+            if line.split()[0] == "OTHERWISE:":
+                return "default:" + self.translateLine(line.replace("OTHERWISE:", ""))
+
+
+    # --- SUB METHODS DEPLOYED IN ABOVE METHODS ---
+
+    def translateLine(self, line):
+        assemblyLine = self.checkInputOutput(line)
+        assemblyLine = self.translateOperations(assemblyLine)
+        return assemblyLine
+
     def translateOperations(self, operationsParameter):
         operations = operationsParameter
         operations = operations.replace("<>", "!=")
