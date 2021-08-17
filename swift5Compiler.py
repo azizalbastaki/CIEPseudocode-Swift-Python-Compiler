@@ -26,13 +26,27 @@ class swift5Compiler():
                 operations+= str(args[0][i])
             return str(args[0][0] + " = " + str(self.translateOperations(operations)))
 
+    def makeSelection(self, line):
+        if line == "THEN":
+            return "{"
+        elif line.split()[0] == "IF":
+            conditionLine = line
+            conditionLine = conditionLine.replace("IF ","")
+            conditionLine = conditionLine.replace(" THEN","")
+            conditionLine = self.translateOperations(conditionLine)
+            return ("if " + conditionLine)
+        elif line.split()[0] == "CASE":
+            return ("# CASE STATEMENTS NOT YET SUPPORTED IN PYTHON") # WORK FOR SWIFT
+        elif line == "ENDIF" or line == "ENDCASE":
+            return "}"
+
     def translateOperations(self, operationsParameter):
         operations = operationsParameter
         operations = operations.replace("<>", "!=")
-        operations = operations.replace(" AND ", " and ")
+        operations = operations.replace(" AND ", " && ")
         operations = operations.replace("&", "+")
-        operations = operations.replace(" NOT ", " not ")
-        operations = operations.replace(" OR ", " or ")
+        operations = operations.replace(" NOT ", " !")
+        operations = operations.replace(" OR ", " || ")
         operations = operations.replace("=", "==")
         self.operationChanges = True
         while self.operationChanges == True:
